@@ -18,7 +18,7 @@ rsync -aH --delete --checksum \
       --exclude='postgres_data' \
       ~ /tmp/backup
 ```
-![скриншот выполнения команды](img/backup.png)
+![скриншот выполнения команды](img/backup1.png)
 
 
 ## Задание 2: Ежедневное резервное копирование через `cron`
