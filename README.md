@@ -1,28 +1,22 @@
-# Домашнее задание к занятию «Кэширование Redis/memcached»
+# Домашнее задание к занятию «ELK»
 
-## Задание 1. Какие проблемы решает кэширование
+## Задание 1. Elasticsearch
 
-Кэширование решает следующие основные проблемы:
+![Задание 1](img/task1-cluster-health.png)
 
-- Тяжёлые и частые запросы к основной базе данных
-- Высокая нагрузка на «горячие» данные (профили, сессии, товары)
-- Пиковые всплески трафика (чёрная пятница)
-- Экономия ресурсов основной СУБД
-- Ускорение внешних API
-- Rate limiting, защита от брутфорса
-- Хранение сессий и временных данных
+## Задание 2. Kibana (Dev Tools)
 
-## Задание 2. Memcached запущен
+![Задание 2](img/task2-kibana-console.png)
 
-![Статус Memcached](img/memcached-status.png)
+## Задание 3. Logstash → логи Nginx в Elasticsearch
 
-## Задание 3. Удаление по TTL в Memcached (5 секунд)
+![Задание 3](img/task3-logstash-logs.png)
 
-До истечения TTL — ключ есть  
-Через 10 секунд — ключ удалён
+## Задание 4. Filebeat → логи Nginx в Elasticsearch
 
-![Memcached TTL — до и после](img/memcached-ttl.png)
+![Задание 4](img/task4-filebeat-logs.png)
 
-## Задание 4. Запись и чтение в Redis
-
-![Работа с Redis — запись и чтение ключей](img/redis-keys.png)
+Всё поднято через docker-compose на Ubuntu 24.04  
+cluster_name `savkin`  
+Логи Nginx успешно отправлены через Logstash и через Filebeat в разные индексы  
+В Kibana созданы соответствующие index patterns и видны логи из обоих источников
