@@ -39,7 +39,6 @@ FLUSH PRIVILEGES;
 | film_category      | `film_id`, `category_id`          |
 | film_text          | `film_id`                         |
 | inventory          | `inventory_id`                    |
-| 
 | language           | `language_id`                     |
 | payment            | `payment_id`                      |
 | rental             | `rental_id`                       |
