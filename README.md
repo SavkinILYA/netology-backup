@@ -1,46 +1,61 @@
-# Домашнее задание к занятию «Работа с данными (DDL/DML)
+# Домашнее задание к занятию «Уязвимости и атаки на информационные системы»
 
-## Задание 1. Поднятие MySQL и восстановление базы Sakila
+## Задание 1. Какие уязвимости были вами обнаружены?
 
-### 1. Запуск MySQL 8.0 в Docker
-```bash
-docker run --name mysql-sakila \
-  -e MYSQL_ROOT_PASSWORD=rootpassword \
-  -e MYSQL_DATABASE=sakila \
-  -p 3306:3306 \
-  -d mysql:8.0 \
-  --default-authentication-plugin=mysql_native_password
-```
-#### Создание пользователя и выдача прав
-```sql
-CREATE USER 'sys_temp'@'%' IDENTIFIED WITH mysql_native_password BY 'temppass123';
-GRANT ALL PRIVILEGES ON *.* TO 'sys_temp'@'%' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-```
+### На виртуальной машине Metasploitable разрешены следующие сетевые службы:
 
-![Задание 1](img/user.png)
+- SSH (Port 22): OpenSSH 4.7p1 (Debian-8ubuntu1)
+- HTTP (Port 80): Apache httpd 2.2.8 (Ubuntu)
+- FTP (Port 21): vsftpd 2.3.4
+- MySQL (Port 3306): MySQL 5.0.51a-3ubuntu5 (Ubuntu)
 
-![Задание 2](img/grants.png)
+### На основе реальных версий служб были найдены следующие уязвимости:
 
-![Задание 3](img/table.png)
+OpenSSH 4.7p1 — [Уязвимость CVE-2008-0166](https://www.exploit-db.com/exploits/4995)
+Apache httpd 2.2.8 — [Уязвимость CVE-2009-1890](https://www.exploit-db.com/exploits/8715)
+vsftpd 2.3.4 — [Уязвимость с бэкдором](https://www.exploit-db.com/exploits/17491)
 
-## Задание 2. Первичные ключи таблиц базы sakila
+## Задание 2: Сканирование Metasploitable в различных режимах
 
-| Название таблицы   | Первичный ключ                    |
-|--------------------|-----------------------------------|
-| actor              | `actor_id`                        |
-| address            | `address_id`                      |
-| category           | `category_id`                     |
-| city               | `city_id`                         |
-| country            | `country_id`                      |
-| customer           | `customer_id`                     |
-| film               | `film_id`                         |
-| film_actor         | `actor_id`, `film_id`             |
-| film_category      | `film_id`, `category_id`          |
-| film_text          | `film_id`                         |
-| inventory          | `inventory_id`                    |
-| language           | `language_id`                     |
-| payment            | `payment_id`                      |
-| rental             | `rental_id`                       |
-| staff              | `staff_id`                        |
-| store              | `store_id`                        |
+### Чем отличаются эти режимы сканирования с точки зрения сетевого трафика?
+
+1. SYN-сканирование (по умолчанию)
+Отправляет TCP SYN пакет на целевой порт
+Ожидает TCP SYN-ACK или TCP RST
+Не завершает соединение полностью (half-open scanning)
+Создает минимальный сетевой трафик
+Сложнее для обнаружения системами защиты
+2. FIN-сканирование
+Отправляет TCP FIN пакет
+Используется для сканирования портов, которые не отвечают на SYN
+Ответы: RST для открытых портов, ACK для закрытых
+Очень тихий метод, часто используется для обхода фаерволов
+Может быть неэффективным на современных системах
+3. Xmas-сканирование
+Отправляет TCP пакет с флагами FIN, URG и PSH
+Порт считается открытым, если приходит RST
+Называется так из-за внешнего вида пакета (как морозное рождество)
+Очень необычный трафик, легко обнаруживается
+4. UDP-сканирование
+Отправляет UDP-пакет на каждый целевой порт
+Ожидает ICMP ошибку "порт недоступен" или ответ от сервиса
+Медленное, так как требует ожидания ответов
+Используется для обнаружения UDP-сервисов (DNS, SNMP и т.д.)
+
+### Как отвечает сервер?
+- Для SYN-сканирования:
+Открытый порт: Ответ TCP SYN-ACK
+Закрытый порт: Ответ TCP RST
+Фильтрованный порт: Нет ответа или ICMP-ошибка
+- Для FIN-сканирования:
+Открытый порт: Ответ TCP RST
+Закрытый порт: Ответ TCP ACK
+Фильтрованный порт: Нет ответа
+- Для Xmas-сканирования:
+Открытый порт: Ответ TCP RST
+Закрытый порт: Ответ TCP RST
+Фильтрованный порт: Нет ответа
+- Для UDP-сканирования:
+Открытый порт: Ответ UDP-сервиса или ICMP "порт недоступен"
+Закрытый порт: ICMP "порт недоступен"
+Фильтрованный порт: Нет ответа или ICMP-ошибка
