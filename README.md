@@ -11,9 +11,9 @@
 
 ### На основе реальных версий служб были найдены следующие уязвимости:
 
-OpenSSH 4.7p1 — [Уязвимость CVE-2008-0166](https://www.exploit-db.com/exploits/4995)
-Apache httpd 2.2.8 — [Уязвимость CVE-2009-1890](https://www.exploit-db.com/exploits/8715)
-vsftpd 2.3.4 — [Уязвимость с бэкдором](https://www.exploit-db.com/exploits/17491)
+- OpenSSH 4.7p1 — [Уязвимость CVE-2008-0166](https://www.exploit-db.com/exploits/4995)
+- Apache httpd 2.2.8 — [Уязвимость CVE-2009-1890](https://www.exploit-db.com/exploits/8715)
+- vsftpd 2.3.4 — [Уязвимость с бэкдором](https://www.exploit-db.com/exploits/17491)
 
 ## Задание 2: Сканирование Metasploitable в различных режимах
 
